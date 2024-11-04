@@ -1,0 +1,47 @@
+{
+  "name": "AdobeFormsService",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^1",
+    "@sap-cloud-sdk/resilience": "^3.22.2",
+    "@sap/cds": "^8",
+    "@sap/xssec": "^4",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.6",
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^8"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "cds": {
+    "requires": {
+      "AdobeApi": {
+        "kind": "rest",
+        "credentials": {
+          "url": "https://sydney-2zgrdye7.authentication.ap10.hana.ondemand.com/oauth/token",
+          "requestTimeout": 10000,
+          "csrf": true
+        }
+      },
+      "RealApiAdobeCall": {
+        "kind": "rest",
+        "credentials": {
+          "url": "https://adsrestapi-formsprocessing.cfapps.ap10.hana.ondemand.com/v1/adsRender/pdf",
+          "requestTimeout": 10000,
+          "csrf": true
+        }
+      },
+      "auth": "mocked"
+    },
+    "sql": {
+      "native_hana_associations": false
+    }
+  }
+}

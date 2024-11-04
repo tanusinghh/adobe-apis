@@ -1,0 +1,31 @@
+### Test POST request to pdfdataSrv
+POST http://localhost:4004/odata/v4/restapi/pdfdataSrv
+Content-Type: application/json
+
+{
+    "xmlData":    "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGZvcm0xPg0KICAgPENvbnRlbnRwYXJ0Pg0KICAgICAgPFRleHRGaWVsZDM+RWdvIGlsbGU8L1RleHRGaWVsZDM+DQogICAgICA8VGV4dEZpZWxkNC8+DQogICAgICA8VGV4dEZpZWxkNS8+DQogICAgICA8VGV4dEZpZWxkNi8+DQogICAgICA8VGV4dEZpZWxkNy8+DQogICAgICA8SW1hZ2VGaWVsZDEvPg0KICAgPC9Db250ZW50cGFydD4NCiAgIDxQYWdlMj4NCiAgICAgIDxDaGVja0JveDEvPg0KICAgPC9QYWdlMj4NCjwvZm9ybTE+"     
+}
+### Test POST request to pdfdataSrv
+POST http://localhost:4004/odata/v4/restapi/pdfinfoSrv
+Content-Type: application/json
+
+{
+    "Transport": "Truck Model X",
+    "Datum1": "2024-10-15",
+    "IsDriverCertificate": true,
+    "IsAreaClean": true,
+    "IsLoadSpace": true,
+    "TestedBy": "John Doe",
+    "IsInspectionValid": true,
+    "IsTiresOk": true,
+    "IsLightingFine": true,
+    "IsLeaksNotVisible": false,
+    "IsLoadingAreaClean": true,
+    "IsFireExtinguishersSign": true,
+    "IsProtectiveEquipment": true,
+    "IsSecuredLoading": true,
+    "IsWarningSign": false,
+    "Signature": "John Doe Signature",
+    "Datum2": "2024-10-15"
+}
+
