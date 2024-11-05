@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 const axios = require('axios');
 
 module.exports = async function (srv) {
@@ -8,7 +8,7 @@ module.exports = async function (srv) {
     const AdobeApi = await cds.connect.to('AdobeApi');
     const RealApiAdobeCall = await cds.connect.to('RealApiAdobeCall');
 
-    let Token = "";
+    let Token = ""
 
     // Implementing the getStatus function
     srv.on('CREATE', pdfinfoSrv, GetPdfInfo);
@@ -53,40 +53,37 @@ module.exports = async function (srv) {
                                     <NoAreaClean>${NoAreaClean}</NoAreaClean>
                                     <YesLoadspace>${YesLoadSpace}</YesLoadspace>
                                     <NoLoadspace>${NoLoadSpace}</NoLoadspace>
-                                    <InspectionValid>${IsInspectionValid ? 1 : 0}</InspectionValid>
-                                    <TiresOk>${IsTiresOk ? 1 : 0}</TiresOk>
-                                    <LightingFine>${IsLightingFine ? 1 : 0}</LightingFine>
-                                    <LeaksNotVisible>${IsLeaksNotVisible ? 1 : 0}</LeaksNotVisible>
-                                    <LoadingAreaClean>${IsLoadingAreaClean ? 1 : 0}</LoadingAreaClean>
-                                    <FireExtinguishersSign>${IsFireExtinguishersSign ? 1 : 0}</FireExtinguishersSign>
-                                    <ProtectiveEquipment>${IsProtectiveEquipment ? 1 : 0}</ProtectiveEquipment>
-                                    <SecuredLoading>${IsSecuredLoading ? 1 : 0}</SecuredLoading>
-                                    <WarningSign>${IsWarningSign ? 1 : 0}</WarningSign>
+                                    <InspectionValid>${IsInspectionValid?1:0}</InspectionValid>
+                                    <TiresOk>${IsTiresOk?1:0}</TiresOk>
+                                    <LightingFine>${IsLightingFine?1:0}</LightingFine>
+                                    <LeaksNotVisible>${IsLeaksNotVisible?1:0}</LeaksNotVisible>
+                                    <LoadingAreaClean>${IsLoadingAreaClean?1:0}</LoadingAreaClean>
+                                    <FireExtinguishersSign>${IsFireExtinguishersSign?1:0}</FireExtinguishersSign>
+                                    <ProtectiveEquipment>${IsProtectiveEquipment?1:0}</ProtectiveEquipment>
+                                    <SecuredLoading>${IsSecuredLoading?1:0}</SecuredLoading>
+                                    <WarningSign>${IsWarningSign?1:0}</WarningSign>
                                     <Signature>${Signature}</Signature>
-                                    </form1>`;
+                                    </form1>`
+
+
 
             const base64Xml = Buffer.from(xmlData).toString('base64');
 
-            // Call Adobe API and get the PDF as a base64 string
-            const base64PDF = await onAdobeAPICall(req, res, base64Xml);
 
-            // Convert base64 string to a buffer
-            const pdfBuffer = Buffer.from(base64PDF, 'base64');
 
-            // Set headers for file download
-            res.set({
-                'Content-Type': 'application/pdf',
-                'Content-Disposition': 'attachment; filename="generated.pdf"',
-                'Content-Length': pdfBuffer.length,
-            });
+            let result = await onAdobeAPICall(req, res, base64Xml);
+            return result;
 
-            // Send the PDF buffer in the response
-            res.send(pdfBuffer);
+
+
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "An error occurred while generating the PDF." });
         }
     }
+
+
+
 
     async function onAdobeAPICall(req, res, base64Xml) {
         console.log(base64Xml);
@@ -105,68 +102,93 @@ module.exports = async function (srv) {
                 });
             Token = response.data.access_token;
 
-            const rdata = await RealAdobeCall(req, res, Token, base64Xml);
+            rdata = await RealAdobeCall(req, res, Token, base64Xml);
             return rdata;
+
+
+
         } catch (error) {
             console.error('Error calling Adobe API:', error.message);
             return false;
         }
-    }
+    };
+
 
     async function RealAdobeCall(req, res, Token, base64Xml) {
+
+
         try {
             console.log("Reached!!");
 
-            const B64_XdpTemp = await getTemplateData();
+
+
+            B64_XdpTemp = await getTemplateData()
+            // B64_xmlData = Buffer.from(xmlData, 'binary').toString('base64');
+
+
+
 
             // Defining the payload
             const payload = {
                 xdpTemplate: B64_XdpTemp,   // Base64 encoded XDP template
-                xmlData: base64Xml,          // Base64 encoded XML data
-                formType: 'print',           // Type of form (e.g., "print")
-                formLocale: 'en_US',         // Locale (e.g., "en_US")
-                taggedPdf: 1,                // Whether the PDF should be tagged
-                embedFont: 0,                // Whether fonts should be embedded
-                changeNotAllowed: false,      // Flag for disallowing changes
-                printNotAllowed: false        // Flag for disallowing printing
+                xmlData: base64Xml,    // Base64 encoded XML data
+                formType: 'print',         // Type of form (e.g., "print")
+                formLocale: 'en_US',     // Locale (e.g., "en_US")
+                taggedPdf: 1,       // Whether the PDF should be tagged
+                embedFont: 0,       // Whether fonts should be embedded
+                changeNotAllowed: false, // Flag for disallowing changes
+                printNotAllowed: false    // Flag for disallowing printing
             };
             console.log(payload);
+
 
             // Making the POST request to the Adobe API endpoint with Bearer token authentication
             const response = await axios.post(`${RealApiAdobeCall.options.credentials.url}`,
                 payload, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${Token}` // Adding the Bearer token to the headers
-                    }
-                });
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Token}` // Adding the Bearer token to the headers
+                }
+            });
+            console.log(response);
 
             // Return the base64 content from the response
-            const base64PDF = response.data; // Assuming response is already in Base64 format
-            return base64PDF;
+            console.log("Hello");
+            const base64PDF = response.data;
+            console.log(response); // Assuming response is already in Base64 format
+            return base64PDF
+            // return res.status(200).json({ base64PDF }); // Sending Base64 PDF in response
         } catch (error) {
             console.error('Error generating Base64 PDF:', error);
+            // return req.status(500).json({ message: 'Error generating PDF', error: error.message });
         }
     }
 
-    async function readFileAsBase64(filePath) {
-        try {
-            const data = fs.readFileSync(filePath);
-            const base64Data = data.toString('base64');
-            return base64Data;
-        } catch (err) {
-            console.error('Error reading file:', err.message);
-            throw err;
-        }
-    }
 
-    async function getTemplateData() {
-        const filePath = path.join('/home/user/projects/adobe-apis/testing.xdp');
-        try {
-            const base64Content = await readFileAsBase64(filePath);
-            return base64Content;
-        } catch (error) {
-            console.log("Error while reading file " + error.message);
-        }
-    }
+
+
 };
+async function readFileAsBase64(filePath) {
+    try {
+
+        const data = fs.readFileSync(filePath);
+
+        const base64Data = data.toString('base64');
+
+        return base64Data;
+    } catch (err) {
+        console.error('Error reading file:', err.message);
+        throw err;
+    }
+}
+
+async function getTemplateData() {
+    const filePath = path.join('/home/user/projects/adobe-apis/testing.xdp');
+    try {
+        const base64Content = await readFileAsBase64(filePath);
+        return base64Content;
+    } catch (error) {
+        console.log("Error while reading file " + error.message);
+    }
+
+}
