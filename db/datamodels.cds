@@ -12,7 +12,6 @@ using {cuid} from '@sap/cds/common';
 
 entity pdfinfo: cuid {
      Transport : String;
-     Datum1 : DateTime ;
      IsDriverCertificate : Boolean;
      IsAreaClean : Boolean;
      IsLoadSpace : Boolean;
@@ -27,6 +26,5 @@ entity pdfinfo: cuid {
      IsSecuredLoading : Boolean;
      IsWarningSign : Boolean;
      Signature: String ; 
-     Datum2 : Date;
 
 }

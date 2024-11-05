@@ -11,7 +11,6 @@ Content-Type: application/json
 
 {
     "Transport": "Truck Model X",
-    "Datum1": "2024-10-15",
     "IsDriverCertificate": true,
     "IsAreaClean": true,
     "IsLoadSpace": true,
@@ -25,7 +24,6 @@ Content-Type: application/json
     "IsProtectiveEquipment": true,
     "IsSecuredLoading": true,
     "IsWarningSign": false,
-    "Signature": "John Doe Signature",
-    "Datum2": "2024-10-15"
+    "Signature": "John Doe Signature"
 }
 
